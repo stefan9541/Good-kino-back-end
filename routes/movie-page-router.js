@@ -8,6 +8,9 @@ const moviePageRouter = () => {
     const { movieName } = req.query;
 
     movieModel.findOne({ Title: movieName }, (err, film) => {
+      if (err) {
+        return res.sendStatus(404);
+      }
       if (!film) {
         return res.sendStatus(404);
       }

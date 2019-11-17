@@ -9,8 +9,18 @@ const commentariesModel = new Schema({
     index: true
   },
   author: {
-    type: String,
-    required: true
+    userId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      index: true
+    },
+    userAvatar: {
+      type: String,
+    },
+    userName: {
+      type: String,
+      require: true
+    }
   },
   body: {
     type: String,
@@ -19,7 +29,8 @@ const commentariesModel = new Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+
 });
 
 module.exports = mongoose.model("commentaries", commentariesModel);

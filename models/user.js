@@ -5,7 +5,6 @@ const { Schema } = mongoose;
 const UserModel = new Schema({
   googleId: {
     type: String,
-    unique: true,
     index: {
       unique: true
     }
@@ -16,7 +15,8 @@ const UserModel = new Schema({
   },
   picture: {
     type: String,
-  }
+  },
+  favoriteMovies: [{ type: Schema.Types.ObjectId }]
 });
 
 module.exports = mongoose.model("user", UserModel);

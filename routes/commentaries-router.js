@@ -17,12 +17,13 @@ module.exports = () => {
   });
 
   router.post("/post-commentaries", (req, res) => {
+    console.log(req.body)
     const commentar = new commentariesModel({ ...req.body });
     commentar.save()
       .then(commentar => {
         res.json(commentar);
       })
-      .catch(err => console.error(err));
+      .catch(err => res.sendStatus(403));
   });
 
   return router;
