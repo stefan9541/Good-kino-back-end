@@ -16,7 +16,12 @@ const UserModel = new Schema({
   picture: {
     type: String,
   },
-  favoriteMovies: [{ type: Schema.Types.ObjectId }]
+  favoriteMovies: [{ type: Schema.Types.ObjectId }],
+  ratedMovies: [{
+    _id: false,
+    movieId: { type: Schema.Types.ObjectId, required: true },
+    rate: { type: String, required: true }
+  }]
 });
 
 module.exports = mongoose.model("user", UserModel);

@@ -90,6 +90,16 @@ const moviesModel = new Schema({
   },
   imdbID: {
     type: String
+  },
+  totalUsersRate: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  totalUsersVotes: {
+    type: Number,
+    required: true,
+    default: 0
   }
 });
 

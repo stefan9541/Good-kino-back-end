@@ -11,6 +11,7 @@ const commentariesRouter = require("./commentaries-router");
 const googleAuth = require("./google-auth");
 const getAuthenticatedUser = require("./get-authenticated-user");
 const favoriteMovieUserCollections = require("./favorite-movies");
+const updateMovieRate = require("./update-rate-movie");
 
 const routes = app => {
   app.use("/api", leftSidebarRoute());
@@ -24,6 +25,7 @@ const routes = app => {
   app.use("/api", googleAuth());
   app.use("/api", userIsAuthenticated, getAuthenticatedUser());
   app.use("/api/user", userIsAuthenticated, favoriteMovieUserCollections());
+  app.use("/api/user", userIsAuthenticated, updateMovieRate());
 
   app.use((err, req, res, next) => {
     next(err);
