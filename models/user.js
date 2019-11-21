@@ -21,6 +21,15 @@ const UserModel = new Schema({
     _id: false,
     movieId: { type: Schema.Types.ObjectId, required: true },
     rate: { type: String, required: true }
+  }],
+  continueWatch: [{
+    _id: false,
+    movieId: { type: Schema.Types.ObjectId, required: true },
+    type: { type: String, required: true },
+    genre: { type: String, required: true },
+    title: { type: String, required: true },
+    date: { type: Date, default: Date.now },
+    isWatch: { type: Boolean, default: false }
   }]
 });
 
