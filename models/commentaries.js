@@ -9,18 +9,8 @@ const commentariesModel = new Schema({
     index: true
   },
   author: {
-    userId: {
-      type: Schema.Types.ObjectId,
-      required: true,
-      index: true
-    },
-    userAvatar: {
-      type: String,
-    },
-    userName: {
-      type: String,
-      require: true
-    }
+    type: Schema.Types.ObjectId,
+    ref: "user"
   },
   body: {
     type: String,

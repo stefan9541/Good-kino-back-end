@@ -9,6 +9,7 @@ const moviePageRouter = require("./movie-page-router");
 const qualityMovieRouter = require("./quality-movie");
 const commentariesRouter = require("./commentaries-router");
 const googleAuth = require("./google-auth");
+const localAuth = require("./local-auth");
 const getAuthenticatedUser = require("./get-authenticated-user");
 const favoriteMovieUserCollections = require("./favorite-movies");
 const updateMovieRate = require("./update-rate-movie");
@@ -24,6 +25,7 @@ const routes = app => {
   app.use("/api", qualityMovieRouter());
   app.use("/api", commentariesRouter());
   app.use("/api", googleAuth());
+  app.use("/api", localAuth());
   app.use("/api", userIsAuthenticated, getAuthenticatedUser());
   app.use("/api/user", userIsAuthenticated, favoriteMovieUserCollections());
   app.use("/api/user", userIsAuthenticated, updateMovieRate());

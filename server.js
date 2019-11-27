@@ -11,6 +11,7 @@ const config = require("./config/main");
 const passport = require("passport");
 const routes = require("./routes");
 require("./passport-strategy/google-strategy");
+require("./passport-strategy/local-strategy");
 
 const app = express();
 

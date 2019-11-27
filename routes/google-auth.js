@@ -9,9 +9,10 @@ module.exports = () => {
 
   router.get('/google/redirect',
     passport.authenticate('google', {
-      successRedirect: "http://localhost:3000",
       failureRedirect: "/api/logout"
-    }));
-    
+    }), (req, res) => {
+      res.redirect(req.headers.referer);
+    });
+
   return router;
 }

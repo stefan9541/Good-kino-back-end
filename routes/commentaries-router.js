@@ -10,6 +10,13 @@ module.exports = () => {
     commentariesModel.find({
       movieId: ObjectId(req.query.movieId)
     })
+      .populate({
+        path: "author",
+        select: {
+          picture: 1,
+          userName: 1
+        }
+      })
       .then(commentaries => {
         commentaries.reverse();
         res.json(commentaries);
@@ -17,10 +24,16 @@ module.exports = () => {
   });
 
   router.post("/post-commentaries", (req, res) => {
-    const commentar = new commentariesModel({ ...req.body });
+    const { _id: author } = req.user;
+    const { commentText: body, movieId } = req.body;
+    const commentar = new commentariesModel({
+      body,
+      movieId,
+      author
+    });
     commentar.save()
-      .then(commentar => {
-        res.json(commentar);
+      .then(comment => {
+        res.json(comment);
       })
       .catch(err => res.sendStatus(403));
   });
