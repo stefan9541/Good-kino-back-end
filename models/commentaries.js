@@ -10,7 +10,6 @@ const commentariesModel = new Schema({
   },
   author: {
     type: Schema.Types.ObjectId,
-    ref: "user"
   },
   body: {
     type: String,
@@ -20,7 +19,14 @@ const commentariesModel = new Schema({
     type: Date,
     default: Date.now
   },
-
+  likes: [{
+    type: Schema.Types.ObjectId,
+    default: []
+  }],
+  dislikes: [{
+    type: Schema.Types.ObjectId,
+    default: []
+  }],
 });
 
 module.exports = mongoose.model("commentaries", commentariesModel);
