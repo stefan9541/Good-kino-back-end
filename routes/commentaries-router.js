@@ -7,9 +7,16 @@ const userIsAuthenticated = require("../middleware/user-is-authenticated");
 
 module.exports = () => {
   router.get("/get-commentaries", (req, res) => {
-    commentariesModel.
-      aggregate()
-      .match({ movieId: ObjectId(req.query.movieId) })
+    const { movieId, page } = req.query;
+    const limit = 40;
+    const offset = page * limit;
+    const commentsCount = commentariesModel
+      .countDocuments({ movieId: ObjectId(movieId) })
+      .exec();
+
+    const comments = commentariesModel
+      .aggregate()
+      .match({ movieId: ObjectId(movieId) })
       .lookup({
         from: "users",
         localField: "author",
@@ -25,16 +32,19 @@ module.exports = () => {
         createdAt: 1,
         author: {
           userName: 1,
-          picture: 1,
+          picture: 1
         }
       })
-      .exec()
-      .then(commentaries => {
-        commentaries.reverse();
-        res.json(commentaries);
-      });
-  })
+      .skip(offset)
+      .limit(limit)
+      .exec();
 
+    Promise.all([comments, commentsCount])
+      .then(([commentsResponse, countResponse]) =>
+        res.json({ commentsResponse, countResponse })
+      )
+      .catch(err => res.sendStatus(404));
+  });
 
   router.post("/post-commentaries", (req, res) => {
     const { _id: author } = req.user;
@@ -44,58 +54,67 @@ module.exports = () => {
       movieId,
       author
     });
-    commentar.save()
+    commentar
+      .save()
       .then(comment => {
         res.json(comment);
       })
       .catch(err => res.sendStatus(403));
   });
 
-  router.patch("/commentaries/update/likes", userIsAuthenticated, (req, res, next) => {
-    const { commentariesId, isLiked } = req.body;
-    const { _id: userId } = req.user;
-    if (isLiked) {
-      commentariesModel.findByIdAndUpdate(commentariesId,
-        {
-          $pull: { likes: userId }
-        })
-        .exec()
-        .then(() => res.sendStatus(200))
-        .catch((err) => next(err));
-      return;
-    }
-    commentariesModel.findByIdAndUpdate(commentariesId,
-      {
-        $addToSet: { likes: userId },
-        $pull: { dislikes: userId }
-      })
-      .exec()
-      .then(() => res.sendStatus(200))
-      .catch((err) => next(err))
-  });
-
-  router.patch("/commentaries/update/dislikes", userIsAuthenticated, (req, res, next) => {
-    const { commentariesId, isDislike } = req.body;
-    const { _id: userId } = req.user;
-    if (isDislike) {
-      commentariesModel.findByIdAndUpdate(commentariesId,
-        {
+  router.patch(
+    "/commentaries/update/likes",
+    userIsAuthenticated,
+    (req, res, next) => {
+      const { commentariesId, isLiked } = req.body;
+      const { _id: userId } = req.user;
+      if (isLiked) {
+        commentariesModel
+          .findByIdAndUpdate(commentariesId, {
+            $pull: { likes: userId }
+          })
+          .exec()
+          .then(() => res.sendStatus(200))
+          .catch(err => next(err));
+        return;
+      }
+      commentariesModel
+        .findByIdAndUpdate(commentariesId, {
+          $addToSet: { likes: userId },
           $pull: { dislikes: userId }
         })
         .exec()
         .then(() => res.sendStatus(200))
-        .catch((err) => next(err));
-      return;
+        .catch(err => next(err));
     }
-    commentariesModel.findByIdAndUpdate(commentariesId,
-      {
-        $addToSet: { dislikes: userId },
-        $pull: { likes: userId }
-      })
-      .exec()
-      .then(() => res.sendStatus(200))
-      .catch((err) => next(err))
-  });
+  );
+
+  router.patch(
+    "/commentaries/update/dislikes",
+    userIsAuthenticated,
+    (req, res, next) => {
+      const { commentariesId, isDislike } = req.body;
+      const { _id: userId } = req.user;
+      if (isDislike) {
+        commentariesModel
+          .findByIdAndUpdate(commentariesId, {
+            $pull: { dislikes: userId }
+          })
+          .exec()
+          .then(() => res.sendStatus(200))
+          .catch(err => next(err));
+        return;
+      }
+      commentariesModel
+        .findByIdAndUpdate(commentariesId, {
+          $addToSet: { dislikes: userId },
+          $pull: { likes: userId }
+        })
+        .exec()
+        .then(() => res.sendStatus(200))
+        .catch(err => next(err));
+    }
+  );
 
   return router;
 };

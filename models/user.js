@@ -19,7 +19,7 @@ const UserModel = new Schema({
   },
   password: {
     type: String,
-    minlength: 5,
+    minlength: 5
   },
   userName: {
     type: String,
@@ -29,26 +29,29 @@ const UserModel = new Schema({
     type: String,
     default: "https://anipoisk.org/templates/Animeshnik/dleimages/noavatar.png"
   },
-  favoriteMovies: [{
-    default: [],
-    type: Schema.Types.ObjectId
-  }],
-  ratedMovies: [{
-    default: [],
-    _id: false,
-    movieId: { type: Schema.Types.ObjectId, required: true },
-    rate: { type: String, required: true }
-  }],
-  continueWatch: [{
-    default: [],
-    _id: false,
-    movieId: { type: Schema.Types.ObjectId, required: true },
-    type: { type: String, required: true },
-    genre: { type: String, required: true },
-    title: { type: String, required: true },
-    date: { type: Date, default: Date.now },
-    isWatch: { type: Boolean, default: false }
-  }]
+  favoriteMovies: [
+    {
+      type: Schema.Types.ObjectId
+    }
+  ],
+  ratedMovies: [
+    {
+      _id: false,
+      movieId: { type: Schema.Types.ObjectId, required: true },
+      rate: { type: String, required: true }
+    }
+  ],
+  continueWatch: [
+    {
+      _id: false,
+      movieId: { type: Schema.Types.ObjectId, required: true },
+      type: { type: String, required: true },
+      genre: { type: String, required: true },
+      title: { type: String, required: true },
+      date: { type: Number },
+      isWatch: { type: Boolean, default: false }
+    }
+  ]
 });
 
 module.exports = mongoose.model("user", UserModel);

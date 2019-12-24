@@ -3,7 +3,6 @@ const express = require("express");
 const router = express.Router();
 const moviesModel = require("../models/movies");
 
-
 const paginationAndGettingMoviesFromRouting = () => {
   router.get("/routing-movies", (req, res) => {
     const {
@@ -30,7 +29,9 @@ const paginationAndGettingMoviesFromRouting = () => {
       searchOptions.Year = { $regex: yearValue, $options: "ig" };
     }
 
-    let signature = `смотреть все ${movieByType} ${topType || movieByGenre || ""}`;
+    let signature = `смотреть все ${movieByType} ${topType ||
+      movieByGenre ||
+      ""}`;
 
     if (searchOptions.Type === "top-100") {
       moviesModel
@@ -41,7 +42,7 @@ const paginationAndGettingMoviesFromRouting = () => {
           if (err || !items.length) {
             res.sendStatus(404);
           }
-          res.set("Cache-Control", "public, max-age=31557600");
+          res.set("Cache-Control", "public, max-age=315576");
           const result = [[...items], 33];
           res.json({ result, signature });
         });
@@ -51,11 +52,14 @@ const paginationAndGettingMoviesFromRouting = () => {
       }
 
       const data = moviesModel
-        .find(
-          { Title: { $regex: word, $options: "igx" } },
-        )
+        .find({ Title: { $regex: word, $options: "igx" } })
         .select({
-          Title: 1, Genre: 1, Year: 1, Type: 1, Released: 1, Poster: 1
+          Title: 1,
+          Genre: 1,
+          Year: 1,
+          Type: 1,
+          Released: 1,
+          Poster: 1
         })
         .sort({ [sortedBy]: -1 })
         .skip(offset)
