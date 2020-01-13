@@ -8,7 +8,7 @@ const userIsAuthenticated = require("../middleware/user-is-authenticated");
 module.exports = () => {
   router.get("/get-commentaries", (req, res) => {
     const { movieId, page } = req.query;
-    const limit = 40;
+    const limit = 10;
     const offset = page * limit;
     const commentsCount = commentariesModel
       .countDocuments({ movieId: ObjectId(movieId) })
@@ -35,14 +35,15 @@ module.exports = () => {
           picture: 1
         }
       })
+      .sort({ createdAt: -1 })
       .skip(offset)
       .limit(limit)
       .exec();
 
     Promise.all([comments, commentsCount])
-      .then(([commentsResponse, countResponse]) =>
-        res.json({ commentsResponse, countResponse })
-      )
+      .then(([commentsResponse, countResponse]) => {
+        res.json({ commentsResponse, countResponse });
+      })
       .catch(err => res.sendStatus(404));
   });
 

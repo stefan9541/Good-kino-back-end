@@ -29,6 +29,9 @@ const UserModel = new Schema({
     type: String,
     default: "https://anipoisk.org/templates/Animeshnik/dleimages/noavatar.png"
   },
+  publicAvatarId: {
+    type: String
+  },
   favoriteMovies: [
     {
       type: Schema.Types.ObjectId

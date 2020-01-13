@@ -14,6 +14,7 @@ const getAuthenticatedUser = require("./get-authenticated-user");
 const favoriteMovieUserCollections = require("./favorite-movies");
 const updateMovieRate = require("./update-rate-movie");
 const updateContinueWatchMovie = require("./continue-watch-movie");
+const updateUserAvatar = require("./update-user-image");
 
 const routes = app => {
   app.use("/api", leftSidebarRoute());
@@ -26,6 +27,7 @@ const routes = app => {
   app.use("/api", commentariesRouter());
   app.use("/api", googleAuth());
   app.use("/api", localAuth());
+  app.use("/api/user", userIsAuthenticated, updateUserAvatar());
   app.use("/api", userIsAuthenticated, getAuthenticatedUser());
   app.use("/api/user", userIsAuthenticated, favoriteMovieUserCollections());
   app.use("/api/user", userIsAuthenticated, updateMovieRate());

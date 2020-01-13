@@ -47,5 +47,16 @@ module.exports = function() {
       .then(() => res.sendStatus(200))
       .catch(err => next(err));
   });
+  router.delete("/continue-watch-movie/delete", (req, res, next) => {
+    const { _id: userId } = req.user;
+    const { movieId } = req.query;
+    userModel
+      .findByIdAndUpdate(userId, {
+        $pull: { continueWatch: { movieId } }
+      })
+      .exec()
+      .then(() => res.sendStatus(200))
+      .catch(err => res.json(err));
+  });
   return router;
 };
