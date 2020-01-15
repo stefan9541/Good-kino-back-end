@@ -15,6 +15,7 @@ const favoriteMovieUserCollections = require("./favorite-movies");
 const updateMovieRate = require("./update-rate-movie");
 const updateContinueWatchMovie = require("./continue-watch-movie");
 const updateUserAvatar = require("./update-user-image");
+const updateUsername = require("./update-username");
 
 const routes = app => {
   app.use("/api", leftSidebarRoute());
@@ -32,6 +33,7 @@ const routes = app => {
   app.use("/api/user", userIsAuthenticated, favoriteMovieUserCollections());
   app.use("/api/user", userIsAuthenticated, updateMovieRate());
   app.use("/api/user", userIsAuthenticated, updateContinueWatchMovie());
+  app.use("/api/user", userIsAuthenticated, updateUsername());
 
   app.use((err, req, res, next) => {
     next(err);

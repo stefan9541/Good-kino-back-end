@@ -19,8 +19,12 @@ module.exports = function() {
           return res.status(400).json(err);
         }
       }
+      if (!req.file) {
+        const error = new Error();
+        error.message = "input can not be empty";
+        return res.status(400).json(error);
+      }
       const { path } = req.file;
-
       cloudinaryUpload
         .upload(path, userId)
         .then(({ url, public_id }) => {
@@ -28,18 +32,13 @@ module.exports = function() {
           return { url, public_id };
         })
         .then(({ url, public_id }) => {
-          // update user avatar and return previous url of avatar
-          return userModel
+          userModel
             .findByIdAndUpdate(userId, {
               picture: url,
               publicAvatarId: public_id
             })
             .exec();
-        })
-        .then(({ publicAvatarId, picture }) => {
-          //  delete previos image on cloudinary
-          cloudinaryUpload.deleteImageFromCloudinary(publicAvatarId);
-          return picture;
+          return url;
         })
         .then(url => res.status(200).json({ url }))
         .catch(err => next(err));
