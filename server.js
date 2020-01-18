@@ -45,7 +45,10 @@ const startExpressApp = () => {
   app.use(
     cors({
       credentials: true,
-      origin: "http://localhost:3000"
+      origin:
+        process.env.NODE_ENV === "production"
+          ? "https://good-kino-e6706.firebaseapp.com/"
+          : "http://localhost:3000"
     })
   );
   app.use(
@@ -75,7 +78,11 @@ const startExpressApp = () => {
 
   app.get("/api/logout", (req, res) => {
     req.logOut();
-    res.redirect("http://localhost:3000/");
+    res.redirect(
+      process.env.NODE_ENV === "production"
+        ? "https://good-kino-e6706.firebaseapp.com/"
+        : "http://localhost:3000"
+    );
   });
 
   startServer();
