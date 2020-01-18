@@ -9,8 +9,13 @@ const cors = require("cors");
 const MongoStore = require("connect-mongo")(session);
 const passport = require("passport");
 const routes = require("./routes");
-const config = require("./config/main");
-const cloudinaryConfig = require("./config/cloudinary");
+
+let config, cloudinaryConfig;
+if (process.env.NODE_ENV !== "production") {
+  config = require("./config/main");
+  cloudinaryConfig = require("./config/cloudinary");
+}
+
 const { config: cloudinaryApp } = require("cloudinary").v2;
 const mongoConfig =
   process.env.NODE_ENV === "production"
