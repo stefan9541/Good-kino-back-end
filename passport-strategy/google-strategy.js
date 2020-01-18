@@ -1,8 +1,8 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-let { googleStrategy };
+let googleStrategy;
 if (process.env.NODE_ENV !== "production") {
-  googleStrategy = require("../config/main");
+  googleStrategy = require("../config/main").googleStrategy;
 }
 const UserModel = require("../models/user");
 
