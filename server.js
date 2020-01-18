@@ -10,7 +10,22 @@ const MongoStore = require("connect-mongo")(session);
 const passport = require("passport");
 const routes = require("./routes");
 const config = require("./config/main");
-const { cludinaryConfig } = require("./config/cloudinary");
+const cloudinaryConfig = require("./config/cloudinary");
+const { config: cloudinaryApp } = require("cloudinary").v2;
+const mongoConfig =
+  process.env.NODE_ENV === "production"
+    ? {
+        dbName: process.env.DBNAME,
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useUnifiedTopology: true
+      }
+    : config.options;
+const mongoUri =
+  process.env.NODE_ENV === "production"
+    ? process.env.MONGO_URI
+    : config.mongoUri;
+
 require("./passport-strategy/google-strategy");
 require("./passport-strategy/local-strategy");
 
@@ -42,7 +57,14 @@ const startExpressApp = () => {
   );
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use("*", cludinaryConfig);
+  app.use("*", function(req, res, next) {
+    cloudinaryApp({
+      cloud_name: process.env.CLOUD_NAME || cloudinaryConfig.cloud_name,
+      api_key: process.env.API_KEY || cloudinaryConfig.api_key,
+      api_secret: process.env.API_SECRET || cloudinaryConfig.api_secret
+    });
+    next();
+  });
 
   routes(app);
 
@@ -57,12 +79,14 @@ const startExpressApp = () => {
 const startServer = () => {
   const server = http.createServer(app);
   server.listen(process.env.PORT || config.port, function() {
-    console.log(`==== Server started on port ${config.port} =====`);
+    console.log(
+      `==== Server started on port ${process.env.PORT || config.port} =====`
+    );
   });
 };
 
 mongoose
-  .connect(config.mongoUri, config.options)
+  .connect(mongoUri, mongoConfig)
   .then(() => {
     console.log("Database successfully connected");
     startExpressApp();
