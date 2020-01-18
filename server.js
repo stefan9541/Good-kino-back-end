@@ -60,8 +60,8 @@ const startExpressApp = () => {
   app.use("*", function(req, res, next) {
     cloudinaryApp({
       cloud_name: process.env.CLOUD_NAME || cloudinaryConfig.cloud_name,
-      api_key: process.env.API_KEY || cloudinaryConfig.api_key,
-      api_secret: process.env.API_SECRET || cloudinaryConfig.api_secret
+      api_key: process.env.CLOUD_API_KEY || cloudinaryConfig.api_key,
+      api_secret: process.env.CLOUD_API_SECRET || cloudinaryConfig.api_secret
     });
     next();
   });
