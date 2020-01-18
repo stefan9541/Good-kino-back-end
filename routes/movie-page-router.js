@@ -14,16 +14,15 @@ const moviePageRouter = () => {
       if (!film) {
         return res.sendStatus(404);
       }
-      const genre = film.Genre.split(" ")
-        .slice(0, 1)
-        .join(" ");
-
+      // const genre = film.Genre.split(" ")
+      //   .slice(0, 1)
+      //   .join(" ");
 
       movieModel
         .aggregate()
         .match({
           Type: film.Type,
-          Genre: { $regex: genre, $options: "ig" },
+          // Genre: { $regex: genre, $options: "ig" },
           Title: { $ne: film.Title }
         })
         .sample(4)
