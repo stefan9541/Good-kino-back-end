@@ -47,7 +47,7 @@ const startExpressApp = () => {
       credentials: true,
       origin:
         process.env.NODE_ENV === "production"
-          ? "https://good-kino-e6706.firebaseapp.com/"
+          ? "https://good-kino-e6706.firebaseapp.com"
           : "http://localhost:3000"
     })
   );
