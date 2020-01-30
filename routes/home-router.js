@@ -13,6 +13,7 @@ const homeRouter = () => {
         doc: {
           $push: {
             Type: "$Type",
+            _id: "$_id",
             Poster: "$Poster",
             Genre: "$Genre",
             Title: "$Title",
