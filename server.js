@@ -10,26 +10,18 @@ const MongoStore = require("connect-mongo")(session);
 const passport = require("passport");
 const routes = require("./routes");
 
-let config, cloudinaryConfig;
+let config;
 if (process.env.NODE_ENV !== "production") {
   config = require("./config/main");
-  cloudinaryConfig = require("./config/cloudinary");
 }
 
-const { config: cloudinaryApp } = require("cloudinary").v2;
-const mongoConfig =
-  process.env.NODE_ENV === "production"
-    ? {
-        dbName: process.env.DBNAME,
-        useNewUrlParser: true,
-        useCreateIndex: true,
-        useUnifiedTopology: true
-      }
-    : config.options;
-const mongoUri =
-  process.env.NODE_ENV === "production"
-    ? process.env.MONGO_URI
-    : config.mongoUri;
+const mongoConfig = {
+  dbName: "Stepan",
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useUnifiedTopology: true,
+};
+const mongoUri = config.mongoUri;
 
 require("./passport-strategy/google-strategy");
 require("./passport-strategy/local-strategy");
@@ -45,10 +37,7 @@ const startExpressApp = () => {
   app.use(
     cors({
       credentials: true,
-      origin:
-        process.env.NODE_ENV === "production"
-          ? "https://good-kino-e6706.firebaseapp.com"
-          : "http://localhost:3000"
+      origin: "http://localhost:3000",
     })
   );
   app.use(
@@ -59,20 +48,12 @@ const startExpressApp = () => {
       store: new MongoStore({ mongooseConnection: mongoose.connection }),
       name: "__session",
       cookie: {
-        expires: 24 * 60 * 60 * 1000
-      }
+        expires: 24 * 60 * 60 * 1000,
+      },
     })
   );
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use("*", function(req, res, next) {
-    cloudinaryApp({
-      cloud_name: process.env.CLOUD_NAME || cloudinaryConfig.cloud_name,
-      api_key: process.env.CLOUD_API_KEY || cloudinaryConfig.api_key,
-      api_secret: process.env.CLOUD_API_SECRET || cloudinaryConfig.api_secret
-    });
-    next();
-  });
 
   routes(app);
 
@@ -90,7 +71,7 @@ const startExpressApp = () => {
 
 const startServer = () => {
   const server = http.createServer(app);
-  server.listen(process.env.PORT || config.port, function() {
+  server.listen(process.env.PORT || config.port, function () {
     console.log(
       `==== Server started on port ${process.env.PORT || config.port} =====`
     );
@@ -103,4 +84,4 @@ mongoose
     console.log("Database successfully connected");
     startExpressApp();
   })
-  .catch(err => console.log(err));
+  .catch((err) => console.log(err));

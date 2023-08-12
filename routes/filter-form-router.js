@@ -20,8 +20,8 @@ const filterFormRouter = () => {
 
     const querySearch = {
       Type: byType,
-      Genre: { $regex: byGenre, $options: "ig" },
-      Year: { $regex: year, $options: "ig" }
+      Genre: { $regex: byGenre, $options: "i" },
+      Year: { $regex: year, $options: "i" }
     };
 
     // eslint-disable-next-line func-names
@@ -43,7 +43,10 @@ const filterFormRouter = () => {
         res.set("Cache-Control", "public, max-age=31557600");
         res.json({ result, signature, currentPage });
       })
-      .catch(() => res.sendStatus(404));
+      .catch((err) => {
+        console.error('err',err);
+        return res.sendStatus(404);
+      });
   });
 
   return router;

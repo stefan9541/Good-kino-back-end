@@ -55,6 +55,8 @@ module.exports = function () {
           message: "Введен неверный логин или пароль"
         })
       }
+      console.log('5555555555555',user);
+
       req.logIn(user, function (err) {
         if (err) { return next(err); }
         res.status(200).json(user)

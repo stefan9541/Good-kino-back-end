@@ -23,10 +23,10 @@ const paginationAndGettingMoviesFromRouting = () => {
     };
 
     if (movieByGenre) {
-      searchOptions.Genre = { $regex: movieByGenre, $options: "ig" };
+      searchOptions.Genre = { $regex: movieByGenre, $options: "i" };
     }
     if (yearValue) {
-      searchOptions.Year = { $regex: yearValue, $options: "ig" };
+      searchOptions.Year = { $regex: yearValue, $options: "i" };
     }
 
     let signature = `смотреть все ${movieByType} ${topType ||
